@@ -1,4 +1,5 @@
 data "aws_region" "current" {}
+
 resource "aws_connect_instance" "commerce" {
   identity_management_type         = "CONNECT_MANAGED"
   instance_alias                   = "commerce-connect"
@@ -46,18 +47,6 @@ resource "aws_connect_contact_flow" "commerce-inbound-default" {
   }
 }
 
-resource "aws_lex_intent" "commerce-inbound-order" {
-  create_version = true
-  name           = "connect_commerce_lex_intent"
-  fulfillment_activity {
-    type = "ReturnIntent"
-  }
-  sample_utterances = [
-    "I would like to order flowers",
-    "I would like to order candies",
-  ]
-}
-
 
 resource "aws_lex_bot" "commerce-inbound-order" {
   abort_statement {
@@ -81,6 +70,18 @@ resource "aws_lex_bot" "commerce-inbound-order" {
   child_directed   = false
   name             = "connect_commerce_lex_bot"
   process_behavior = "BUILD"
+}
+
+resource "aws_lex_intent" "commerce-inbound-order" {
+  create_version = true
+  name           = "connect_commerce_lex_intent"
+  fulfillment_activity {
+    type = "ReturnIntent"
+  }
+  sample_utterances = [
+    "I would like to order flowers",
+    "I would like to order candies",
+  ]
 }
 
 resource "aws_connect_bot_association" "commerce-inbound-order" {
